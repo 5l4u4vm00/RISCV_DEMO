@@ -1,0 +1,33 @@
+// RISC-V Test Program (Hex format for $readmemh)
+// 測試基本指令：LI, ADD, SUB, AND, OR, XOR, SLLI, BEQ, BNE, BLT, Loop
+//
+// 預期結果：
+// x1 = 100
+// x2 = 200  
+// x3 = 300 (x1 + x2)
+// x4 = 100 (x2 - x1)
+// x5 = 255 (0xFF)
+// x6 = 15 (0x0F)
+// x7 = 15 (x5 & x6 = 0x0F)
+// x8 = 255 (x5 | x6 = 0xFF)
+// x9 = 240 (x5 ^ x6 = 0xF0)
+// x10 = 1
+// x11 = 16 (x10 << 4)
+// x25 = 5 (loop counter result)
+
+06400093  // 0x00: addi x1, x0, 100     ; x1 = 100
+0C800113  // 0x04: addi x2, x0, 200     ; x2 = 200
+002081B3  // 0x08: add  x3, x1, x2      ; x3 = x1 + x2 = 300
+40110233  // 0x0C: sub  x4, x2, x1      ; x4 = x2 - x1 = 100
+0FF00293  // 0x10: addi x5, x0, 255     ; x5 = 0xFF
+00F00313  // 0x14: addi x6, x0, 15      ; x6 = 0x0F
+006283B3  // 0x18: and  x7, x5, x6      ; x7 = x5 & x6 = 0x0F
+0062E433  // 0x1C: or   x8, x5, x6      ; x8 = x5 | x6 = 0xFF
+0062C4B3  // 0x20: xor  x9, x5, x6      ; x9 = x5 ^ x6 = 0xF0
+00100513  // 0x24: addi x10, x0, 1      ; x10 = 1
+00451593  // 0x28: slli x11, x10, 4     ; x11 = x10 << 4 = 16
+00000C93  // 0x2C: addi x25, x0, 0      ; x25 = 0 (loop counter)
+00500D13  // 0x30: addi x26, x0, 5      ; x26 = 5 (loop limit)
+00100C93  // 0x34: addi x25, x25, 1     ; x25++ (loop body) [LOOP_START]
+FE6C9CE3  // 0x38: bne  x25, x26, -8    ; if x25 != x26, jump to LOOP_START
+0000006F  // 0x3C: jal  x0, 0           ; infinite loop (halt)

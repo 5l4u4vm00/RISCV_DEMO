@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  riscv-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: riscv-cpu-dev:latest
+    container_name: riscv-cpu-dev
+
+    # Mount local project directory to container
+    volumes:
+      - ./workspace:/workspace
+      # X11 forwarding (for GTKWave GUI)
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+
+    # X11 display settings
+    environment:
+      - DISPLAY=${DISPLAY}
+
+    # Keep container running
+    stdin_open: true
+    tty: true
+
+    # Network settings (if needed)
+    network_mode: host
+
+    working_dir: /workspace
+
+    command: /bin/bash
